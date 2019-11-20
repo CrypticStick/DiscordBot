@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project MusicCommands with libraries in sub-folder">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="${dir.buildfile}/../.."/>
+    <property name="dir.jarfile" value="D:/Users/Stickles/Desktop/DiscordBot/modules"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/MusicCommands.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="com.Stickles.Discord.MusicCommands"/>
+                <attribute name="Class-Path" value=". CommandHandler.jar ../DiscordBot.jar ../lib/JDA-3.8.3_462.jar ../lib/jsr305-3.0.2.jar ../lib/annotations-16.0.1.jar ../lib/slf4j-api-1.7.25.jar ../lib/nv-websocket-client-2.5.jar ../lib/okhttp-3.13.0.jar ../lib/okio-1.17.2.jar ../lib/opus-java-api-1.0.4.jar ../lib/jna-4.4.0.jar ../lib/opus-java-natives-1.0.4.jar ../lib/commons-collections4-4.1.jar ../lib/json-20160810.jar ../lib/trove4j-3.0.3.jar"/>
+            </manifest>
+            <fileset dir="${dir.buildfile}/target/classes"/>
+            <!--<fileset dir="${dir.workspace}/DiscordBot/CommandHandler/target/classes"/>-->
+            <!--<fileset dir="${dir.workspace}/DiscordBot/CommandHandler/target/test-classes"/>-->
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/net/dv8tion/JDA/3.8.3_462/JDA-3.8.3_462.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/org/jetbrains/annotations/16.0.1/annotations-16.0.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/com/neovisionaries/nv-websocket-client/2.5/nv-websocket-client-2.5.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/com/squareup/okhttp3/okhttp/3.13.0/okhttp-3.13.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/com/squareup/okio/okio/1.17.2/okio-1.17.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/club/minnced/opus-java-api/1.0.4/opus-java-api-1.0.4.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/net/java/dev/jna/jna/4.4.0/jna-4.4.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/club/minnced/opus-java-natives/1.0.4/opus-java-natives-1.0.4.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/org/apache/commons/commons-collections4/4.1/commons-collections4-4.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/org/json/json/20160810/json-20160810.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/net/sf/trove4j/trove4j/3.0.3/trove4j-3.0.3.jar"/>
+            <!--<fileset dir="${dir.workspace}/DiscordBot/DiscordBot/target/classes"/>-->
+            <!--<fileset dir="${dir.workspace}/DiscordBot/DiscordBot/target/test-classes"/>-->
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/com/sedmelluq/lavaplayer/1.3.16/lavaplayer-1.3.16.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/com/sedmelluq/lava-common/1.1.0/lava-common-1.1.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/com/sedmelluq/lavaplayer-natives/1.3.13/lavaplayer-natives-1.3.13.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/org/apache/httpcomponents/httpclient/4.5.6/httpclient-4.5.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/org/apache/httpcomponents/httpcore/4.4.10/httpcore-4.4.10.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/commons-codec/commons-codec/1.10/commons-codec-1.10.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/commons-io/commons-io/2.6/commons-io-2.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.9.8/jackson-core-2.9.8.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.9.8/jackson-databind-2.9.8.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.9.0/jackson-annotations-2.9.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/org/jsoup/jsoup/1.11.3/jsoup-1.11.3.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/net/iharder/base64/2.3.9/base64-2.3.9.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/com/github/natanbc/lavadsp/0.5.2/lavadsp-0.5.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/theaw/.m2/repository/com/github/natanbc/native-loader/0.1.0/native-loader-0.1.0.jar"/>
+        </jar>
+    </target>
+</project>
