@@ -84,22 +84,20 @@ class JarClassLoader extends URLClassLoader {
     }
     
     /**
-     * Creates the module from the loaded jar. If already initialized, this does nothing.
+     * Initializes the module from the loaded jar. If already initialized, this does nothing.
      *
      * @return True if successful
      */
-    public boolean createModule() {
+	public boolean initModule() {
     	try {
-        	module = (Module) klass.newInstance();
-        	
-        	if (module == null) {
-		        System.out.println("Failed to instantiate a module!");
-		        return false;
-        	}
-        	
+    		if (module == null)
+    			if (!createModule()) {
+    				System.out.println("Failed to instantiate a module!");
+    	    		return false;
+    			}
 	        if (!moduleReady) {
 	    		if (module.getDependencies() != null)
-		        	for (Class<? extends Module> dependency : module.getDependencies()) {
+		        	for (String dependency : module.getDependencies()) {
 		        		if (DiscordBot.getModule(dependency) == null) {	//don't initialize if dependencies are missing
 		        			System.out.println(String.format("%s is missing dependency \"%s\"", module.getName(), dependency));
 		        			module = null;
@@ -110,7 +108,7 @@ class JarClassLoader extends URLClassLoader {
 	        	module.initialize();	//initialize after checking
 	        	
 	    		if (module.getDependencies() != null)
-		        	for (Class<? extends Module> dependency2 : module.getDependencies()) {
+		        	for (String dependency2 : module.getDependencies()) {
 		        		if (DiscordBot.getModule(dependency2) != null)
 		        			DiscordBot.getModule(dependency2).addDependants(module);	//let dependencies know they have a new dependant.
 		        	}
@@ -130,6 +128,32 @@ class JarClassLoader extends URLClassLoader {
     		System.out.println("Failed to instantiate a module!");
     		return false;
     	}
+    }
+    
+	/**
+     * Creates a new instance of a module from the loaded jar. If already created, this does nothing.
+     *
+     * @return True if successful
+     */
+    public boolean createModule() {
+		if (module == null) {
+    	try {
+	    	module = (Module) klass.getDeclaredConstructor().newInstance();
+	    	if (module == null) {
+		        System.out.println("Failed to instantiate a module!");
+		        return false;
+	    	}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+	        module = null;
+    		System.out.println("Failed to instantiate a module!");
+    		return false;
+    	}
+    	return true;
+		} else {
+			System.out.println("Module was already created!");
+			return true;
+		}
     }
     
     /**
@@ -170,7 +194,7 @@ class JarClassLoader extends URLClassLoader {
     		}
     		
     		if (module.getDependencies() != null)
-		    	for (Class<? extends Module> dependency : module.getDependencies())	//let dependencies know they're losing a dependant
+		    	for (String dependency : module.getDependencies())	//let dependencies know they're losing a dependant
 		    		if (DiscordBot.getModule(dependency) != null) 
 		    			DiscordBot.getModule(dependency).removeDependants(module);
 	    	

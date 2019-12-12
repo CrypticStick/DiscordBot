@@ -18,13 +18,13 @@ import com.Stickles.Discord.Database;
 import com.Stickles.Discord.DiscordBotDatabase.DiscordBotDatabase;
 import com.Stickles.ModularCoding.DynamicModuleLoader;
 
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDA.Status;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Game.GameType;
+import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDA.Status;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Activity.ActivityType;
 
 public class DiscordBot extends DynamicModuleLoader {
 	
@@ -64,7 +64,7 @@ public class DiscordBot extends DynamicModuleLoader {
 		try {
 		jda = new JDABuilder(AccountType.BOT)	//configure and start the bot
 				.setToken(database.getToken()).setStatus(OnlineStatus.ONLINE)
-				.setGame(Game.of(GameType.DEFAULT, String.format("%s | %shelp", database.getGame(), database.getPrefix())))
+				.setActivity(Activity.of(ActivityType.DEFAULT, String.format("%s | %shelp", database.getGame(), database.getPrefix())))
 				.build();
 		} catch (LoginException e) {
 			System.err.println("Error: the bot failed to connect. "
@@ -112,6 +112,7 @@ public class DiscordBot extends DynamicModuleLoader {
 		return database;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static <T extends Database>  T readDatabase(Class<T> klass) throws SAXParseException {
     	String name = klass.getName();
     	int index = name.lastIndexOf('.')+1;
@@ -152,7 +153,7 @@ public class DiscordBot extends DynamicModuleLoader {
 		
 				case "quit":
 					jda.getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB,
-							Game.of(GameType.DEFAULT, "Shutting down..."));
+							Activity.of(ActivityType.DEFAULT, "Shutting down..."));
 					System.out.println("Shutting down...\n");
 					System.exit(0);
 					break;

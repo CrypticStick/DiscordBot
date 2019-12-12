@@ -19,19 +19,19 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackState;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.GuildVoiceState;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageReaction;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.VoiceChannel;
-import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
-import net.dv8tion.jda.core.events.message.MessageDeleteEvent;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.events.message.guild.react.GuildMessageReactionAddEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.GuildVoiceState;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * Holder for both the player and a track scheduler for one guild.
@@ -52,7 +52,6 @@ public class GuildMusicManager extends ListenerAdapter {
   /**
    * Music player frontend
    */
-  
   
   public TextChannel textChannel;
   
@@ -144,9 +143,16 @@ public class GuildMusicManager extends ListenerAdapter {
   }
   
   public void updateMusicMode() {
+	  updateMusicMode(null);
+  }
+  
+  public void updateMusicMode(MusicMode newMode) {
   	if (equalizer == null) return;
 	if (timescale == null) return;
 
+	if (newMode != null)
+		playerMessage.setMusicMode(newMode);
+	
 	  if (player.getPlayingTrack() == null)
 		  return;
 	  if(!player.getPlayingTrack().getState().equals(AudioTrackState.PLAYING))
@@ -160,6 +166,10 @@ public class GuildMusicManager extends ListenerAdapter {
 	  }
   }
   
+  public void setTextChannel(TextChannel tc) {
+	  textChannel = tc;
+  }
+  
   private Equalizer equalizer;
   private TimescalePcmAudioFilter timescale;
   /**
@@ -167,7 +177,7 @@ public class GuildMusicManager extends ListenerAdapter {
    * @param manager Audio player manager to use for creating the player.
    */
   public GuildMusicManager(AudioPlayerManager manager, TextChannel tc) {
-	  manager.getConfiguration().setFilterHotSwapEnabled(true);
+	manager.getConfiguration().setFilterHotSwapEnabled(true);
     player = manager.createPlayer();
     player.setFilterFactory((track, format, output)->{
         timescale = new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate);
@@ -178,8 +188,8 @@ public class GuildMusicManager extends ListenerAdapter {
     scheduler = new TrackScheduler(player, this);
     textChannel = tc;
     player.addListener(scheduler);
-    playerM
     DiscordBot.jda.addEventListener(this);
+    playerMessage = new MusicPlayerMessage(this);
   }
   
   @Override
@@ -187,7 +197,7 @@ public class GuildMusicManager extends ListenerAdapter {
 	  if (event.getTextChannel() == null) return;
 	  if (!event.getTextChannel().getId().equals(textChannel.getId()) || playerMessage == null)
 		  return;
-	  if (event.getMessageIdLong() == lastpmid)
+	  if (event.getMessageIdLong() == playerMessage.getLastId())
 		  return;
 //	  GuildVoiceState gvs = textChannel.getGuild().getSelfMember().getVoiceState();
 //	  if (!gvs.inVoiceChannel() && !textChannel.getGuild().getAudioManager().isAttemptingToConnect()) 
@@ -202,8 +212,8 @@ public class GuildMusicManager extends ListenerAdapter {
   
   @Override
   public void onMessageDelete(MessageDeleteEvent event) {
-	  if (event.getMessageIdLong() == lastpmid && !destroyed) {
-		  resetPlayerMessage(true);
+	  if (event.getMessageIdLong() == playerMessage.getLastId() && !playerMessage.isDestroyed()) {
+		  playerMessage.resetPlayerMessage(true);
 	  } 
   }
   
@@ -258,29 +268,17 @@ public class GuildMusicManager extends ListenerAdapter {
 		  			lastTrack(event.getUser());
 		  			break;
 		  		case DiscordEmojis.rewind:
-		  			if (trackData)
-		  				player.getPlayingTrack().getUserData(UserData.class).updatePositionOffset(
-		  						player.getPlayingTrack().getPosition(), speedChange
-		  						);
 		  			scheduler.moveTrackPosition(-10);
-		  			if (trackData)
-		  				player.getPlayingTrack().getUserData(UserData.class).updatePositionOffset(
-		  						player.getPlayingTrack().getPosition(), 1
-		  						);
 		  			break;
 		  		case DiscordEmojis.playPause:
 		  			player.setPaused(!player.isPaused());
 		  			break;
 		  		case DiscordEmojis.fastForward:
-		  			if (trackData)
-		  				player.getPlayingTrack().getUserData(UserData.class).updatePositionOffset(
-		  						player.getPlayingTrack().getPosition(), speedChange
-		  						);
 		  			scheduler.moveTrackPosition(10);
-		  			if (trackData)
-		  				player.getPlayingTrack().getUserData(UserData.class).updatePositionOffset(
-		  						player.getPlayingTrack().getPosition(), 1
-		  						);
+//		  			if (trackData)
+//		  				player.getPlayingTrack().getUserData(UserData.class).updatePositionOffset(
+//		  						player.getPlayingTrack().getPosition(), 1
+//		  						);
 		  			break;
 		  		case DiscordEmojis.nextTrack:
 		  			scheduler.nextTrack();

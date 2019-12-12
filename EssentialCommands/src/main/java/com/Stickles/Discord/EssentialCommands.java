@@ -17,15 +17,15 @@ import com.Stickles.Discord.EssentialCommandsDatabase.EssentialCommandsDatabase;
 import com.Stickles.ModularCoding.DynamicModuleLoader.NoModuleDirException;
 import com.Stickles.ModularCoding.Module;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Game.GameType;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Activity.ActivityType;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class EssentialCommands implements Module {
 
 	final String MODULE_NAME = "Essential Commands";
-	final List<Class<? extends Module>> DEPENDENCIES = Arrays.asList(CommandHandler.class);
+	final List<String> DEPENDENCIES = Arrays.asList("Command Handler");
 	
 	static EssentialCommandsDatabase database = null;
 	
@@ -38,7 +38,7 @@ public class EssentialCommands implements Module {
 		eb.setColor(0x0080FF);
 		StringBuilder commandsSB = new StringBuilder();
 		
-		List<Module> mods = new ArrayList<Module>(DiscordBot.getModule(CommandHandler.class).getDependants());
+		List<Module> mods = new ArrayList<Module>(DiscordBot.getModule("Command Handler").getDependants());
 		Module current = this;
 		Collections.sort(mods,new Comparator<Module>()	//Sorting the modules so that this one is always first
 		  {
@@ -118,11 +118,9 @@ public class EssentialCommands implements Module {
 				CommandHandler.sendMessage(e,String.format("%s, please enter what you would like the new text to be.", e.getAuthor().getAsMention()),false);
 				return;
 			}
-			
-			e.getGuild().getController().setNickname(
-					e.getGuild().getMember(DiscordBot.jda.getSelfUser()),
-					String.join(" ", args)
-					).queue();
+			e.getGuild().getMember(DiscordBot.jda.getSelfUser()).modifyNickname(
+				String.join(" ", args)
+			).queue();
 			database.getGuildList().getGuild(e.getGuild().getId()).setName(String.join(" ", args));
 			DiscordBot.writeDatabase(database);
 			
@@ -136,8 +134,8 @@ public class EssentialCommands implements Module {
 			}
 			DiscordBot.database.setGame(String.join(" ", args));
 			DiscordBot.writeDatabase(DiscordBot.database);
-			DiscordBot.jda.getPresence().setGame(
-					Game.of(GameType.DEFAULT, String.format("%s (Type %shelp)", DiscordBot.database.getGame(), DiscordBot.database.getPrefix()))
+			DiscordBot.jda.getPresence().setActivity(
+					Activity.of(ActivityType.DEFAULT, String.format("%s (Type %shelp)", DiscordBot.database.getGame(), DiscordBot.database.getPrefix()))
 					);
 			CommandHandler.sendMessage(e,String.format("NeoBot is now playing \"%s\"!", String.join(" ", args)),false);
 			return;
@@ -255,7 +253,7 @@ public class EssentialCommands implements Module {
 	}
 	
 	@Override
-	public List<Class<? extends Module>> getDependencies() {
+	public List<String> getDependencies() {
 		return DEPENDENCIES;
 	}
 	

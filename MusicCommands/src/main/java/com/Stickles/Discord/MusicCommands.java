@@ -24,18 +24,18 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
-import net.dv8tion.jda.core.entities.GuildVoiceState;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.VoiceChannel;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.managers.AudioManager;
+import net.dv8tion.jda.api.entities.GuildVoiceState;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.managers.AudioManager;
 
 public class MusicCommands implements Module {
 
 	final String MODULE_NAME = "Music Commands";
-	final List<Class<? extends Module>> DEPENDENCIES = Arrays.asList(CommandHandler.class);
+	final List<String> DEPENDENCIES = Arrays.asList("Command Handler");
 	
 	private static AudioPlayerManager playerManager;
 	private static Map<Long, GuildMusicManager> musicManagers;
@@ -166,8 +166,8 @@ public class MusicCommands implements Module {
 		GuildMusicManager byebye = musicManagers.remove(guildId);
 		if (byebye != null) {
 			DiscordBot.jda.removeEventListener(byebye);
-			byebye.destroyed = true;
-			byebye.deletePlayerMessage();
+			byebye.playerMessage.destroy();
+			byebye.playerMessage.deletePlayerMessage();
 			byebye.player.destroy();
 			byebye = null;
 		}
@@ -423,7 +423,7 @@ public class MusicCommands implements Module {
 	}
 
 	@Override
-	public List<Class<? extends Module>> getDependencies() {
+	public List<String> getDependencies() {
 		return DEPENDENCIES;
 	}
 	

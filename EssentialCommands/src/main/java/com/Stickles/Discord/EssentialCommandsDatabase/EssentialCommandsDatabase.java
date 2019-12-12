@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.*;
 import com.Stickles.DiscordBot;
 import com.Stickles.Discord.Database;
 
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.api.entities.Guild;
 
 @XmlRootElement
 public class EssentialCommandsDatabase implements Database {

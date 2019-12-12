@@ -5,12 +5,12 @@
     <!--define folder properties-->
     <property name="dir.buildfile" value="."/>
     <property name="dir.workspace" value="${dir.buildfile}/../.."/>
-    <property name="dir.jarfile" value="D:/Users/Stickles/Desktop/DiscordBot/modules"/>
+    <property name="dir.jarfile" value="${user.home}/Desktop/DiscordBot/modules"/>
     <target name="create_run_jar">
         <jar destfile="${dir.jarfile}/FunCommands.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="com.Stickles.Discord.FunCommands"/>
-                <attribute name="Class-Path" value=". CommandHandler.jar ../DiscordBot.jar ../lib/JDA-3.8.3_462.jar ../lib/jsr305-3.0.2.jar ../lib/annotations-16.0.1.jar ../lib/slf4j-api-1.7.25.jar ../lib/nv-websocket-client-2.5.jar ../lib/okhttp-3.13.0.jar ../lib/okio-1.17.2.jar ../lib/opus-java-api-1.0.4.jar ../lib/jna-4.4.0.jar ../lib/opus-java-natives-1.0.4.jar ../lib/commons-collections4-4.1.jar ../lib/json-20160810.jar ../lib/trove4j-3.0.3.jar"/>
+                <attribute name="Class-Path" value=". CommandHandler.jar ../DiscordBot.jar ../lib/JDA-3.8.3_462.jar ../lib/jsr305-3.0.2.jar ../lib/annotations-16.0.1.jar ../lib/slf4j-api-1.7.25.jar ../lib/nv-websocket-client-2.5.jar ../lib/okhttp-3.13.0.jar ../lib/okio-1.17.2.jar ../lib/opus-java-api-1.0.4.jar ../lib/jna-4.4.0.jar ../lib/opus-java-natives-1.0.4.jar ../lib/commons-collections4-4.1.jar ../lib/json-20160810.jar ../lib/trove4j-3.0.3.jar ../lib/jackson-databind-2.9.8.jar ../lib/jackson-annotations-2.9.0.jar ../lib/jackson-core-2.9.8.jar ../lib/jaxb-api-2.3.1.jar ../lib/javax.activation-api-1.2.0.jar"/>
             </manifest>
             <fileset dir="${dir.buildfile}/target/classes"/>
             <!--<fileset dir="${dir.workspace}/DiscordBot/CommandHandler/target/classes"/>-->

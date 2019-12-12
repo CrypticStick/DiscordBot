@@ -14,18 +14,23 @@
   	<dependency>
 	  	<groupId>net.dv8tion</groupId>
 	  	<artifactId>JDA</artifactId>
-	  	<version>3.8.3_462</version>
+	  	<version>4.0.0_62</version>
   	</dependency>
     <dependency>
 	    <groupId>com.sedmelluq</groupId>
 	    <artifactId>lavaplayer</artifactId>
-	    <version>1.3.16</version>
+	    <version>1.3.32</version>
   </dependency>
     <dependency>
         <groupId>com.github.natanbc</groupId>
         <artifactId>lavadsp</artifactId>
         <version>0.5.2</version>
     </dependency>
+  	<dependency>
+	  <groupId>javax.xml.bind</groupId>
+	  <artifactId>jaxb-api</artifactId>
+	  <version>2.3.1</version>
+	</dependency>
   </dependencies>
   
 <build>

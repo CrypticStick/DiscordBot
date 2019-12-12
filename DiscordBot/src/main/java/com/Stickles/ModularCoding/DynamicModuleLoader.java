@@ -189,28 +189,28 @@ public abstract class DynamicModuleLoader {
 				    	 
 				    	 List<String> depNames1 = new ArrayList<String>();
 				    	 List<String> depNames2 = new ArrayList<String>();
-				    	 for (Class<? extends Module> klass : o1.getModule().getDependencies()) 
-				    		 depNames1.add(klass.getName());
-				    	 for (Class<? extends Module> klass : o2.getModule().getDependencies()) 
-				    		 depNames2.add(klass.getName());
+				    	 for (String moduleName : o1.getModule().getDependencies()) 
+				    		 depNames1.add(moduleName);
+				    	 for (String moduleName : o2.getModule().getDependencies()) 
+				    		 depNames2.add(moduleName);
 				    	 
-				         if (depNames1.contains(o2.getModule().getClass().getName()))	//if o1 relies on o2, o2 is first
+				         if (depNames1.contains(o2.getModuleName()))	//if o1 relies on o2, o2 is first
 				        	 return 1;
-				         else if (depNames2.contains(o1.getModule().getClass().getName())) //if o2 relies on o1, o1 is first
+				         else if (depNames2.contains(o1.getModuleName())) //if o2 relies on o1, o1 is first
 				        	 return -1;
 				         else													//if neither depend on each other, don't change anything
 				        	 return 0;
 				     }
 				});	
-		
 		for (JarClassLoader jcl : jcls) {
-			jcl.createModule();
+			jcl.initModule();
 		}
 	}
 	
-	public static Module getModule(Class<? extends Module> klass) {
+	public static Module getModule(String moduleName) {
 		for (JarClassLoader jcl : jcls) {
-			if (jcl.getModule().getClass().getName() == klass.getName())
+			if (jcl.getModule() == null) continue;
+			if (jcl.getModule().getName() == moduleName)
 				return jcl.getModule();
 		}
 		return null;
@@ -278,11 +278,21 @@ public abstract class DynamicModuleLoader {
 				e.printStackTrace();
 				return false;
 			}
-	
+			
+			jcl.createModule();
+			for (JarClassLoader _jcl : jcls) {
+				if (jcl.getModuleName() == _jcl.getModuleName()) {
+					System.out.println("ERROR: Multiple modules with the name \'"+jcl.getModuleName()+"\'. Unloading both!");
+					unloadJar(jcl.getModule());
+					unloadJar(_jcl.getModule());
+					return false;
+				}
+			}
 			jcls.add(jcl);	//only save jcl if successfully created
 			
+			
 			if (initialize) 
-				jcl.createModule();
+				jcl.initModule();
 			
 			return true;
 		}

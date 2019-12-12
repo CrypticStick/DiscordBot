@@ -10,13 +10,13 @@ import com.Stickles.Discord.DiscordCommand;
 import com.Stickles.Discord.DiscordEmojis;
 import com.Stickles.ModularCoding.Module;
 
-import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class FunCommands implements Module {
 
 	final String MODULE_NAME = "Fun Commands";
-	final List<Class<? extends Module>> DEPENDENCIES = Arrays.asList(CommandHandler.class);
+	final List<String> DEPENDENCIES = Arrays.asList("Command Handler");
 	
 	@DiscordCommand(Name = "echo",
 			Aliases = {"repeat","copy"},
@@ -57,7 +57,7 @@ public class FunCommands implements Module {
 	}
 	
 	@Override
-	public List<Class<? extends Module>> getDependencies() {
+	public List<String> getDependencies() {
 		return DEPENDENCIES;
 	}
 	

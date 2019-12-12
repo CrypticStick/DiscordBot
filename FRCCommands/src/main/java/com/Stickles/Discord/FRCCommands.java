@@ -16,13 +16,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import com.Stickles.Discord.DiscordCommand;
 import com.Stickles.ModularCoding.Module;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class FRCCommands implements Module {
 
 	final String MODULE_NAME = "FRC Commands";
-	final List<Class<? extends Module>> DEPENDENCIES = Arrays.asList(CommandHandler.class);
+	final List<String> DEPENDENCIES = Arrays.asList("Command Handler");
 
 	static String HttpBlueAllianceGet(String url) {       
 	    try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
@@ -132,7 +132,7 @@ public class FRCCommands implements Module {
 	}
 
 	@Override
-	public List<Class<? extends Module>> getDependencies() {
+	public List<String> getDependencies() {
 		return DEPENDENCIES;
 	}
 	

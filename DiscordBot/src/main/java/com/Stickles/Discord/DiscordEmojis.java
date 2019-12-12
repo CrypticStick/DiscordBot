@@ -21,7 +21,18 @@ public class DiscordEmojis {
 
     public static final String ten = "\ud83d\udd1f";
 
-    public static final String[] numbers = new String[]{DiscordEmojis.one, DiscordEmojis.two, DiscordEmojis.three, DiscordEmojis.four, DiscordEmojis.five, DiscordEmojis.six, DiscordEmojis.seven, DiscordEmojis.eight, DiscordEmojis.nine, DiscordEmojis.ten};
+    public static final String[] numbers = new String[]{
+    		DiscordEmojis.one, 
+    		DiscordEmojis.two, 
+    		DiscordEmojis.three, 
+    		DiscordEmojis.four, 
+    		DiscordEmojis.five, 
+    		DiscordEmojis.six, 
+    		DiscordEmojis.seven, 
+    		DiscordEmojis.eight, 
+    		DiscordEmojis.nine, 
+    		DiscordEmojis.ten
+    		};
 
     public static final String check = "\u2705";
 

@@ -14,10 +14,10 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.GuildVoiceState;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.GuildVoiceState;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 public class MusicPlayerMessage {
 	  private Message playerMessage = null;
@@ -57,6 +57,14 @@ public class MusicPlayerMessage {
 	  
 	  long getLastId() {
 		  return lastpmid;
+	  }
+	  
+	  String getId() {
+		  return playerMessage.getId();
+	  }
+	  
+	  boolean isDestroyed() {
+		  return destroyed;
 	  }
 	  
 	  MusicMode getMusicMode() {
