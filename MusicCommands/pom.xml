@@ -21,11 +21,6 @@
 	    <artifactId>lavaplayer</artifactId>
 	    <version>1.3.32</version>
   </dependency>
-    <dependency>
-        <groupId>com.github.natanbc</groupId>
-        <artifactId>lavadsp</artifactId>
-        <version>0.5.2</version>
-    </dependency>
   	<dependency>
 	  <groupId>javax.xml.bind</groupId>
 	  <artifactId>jaxb-api</artifactId>

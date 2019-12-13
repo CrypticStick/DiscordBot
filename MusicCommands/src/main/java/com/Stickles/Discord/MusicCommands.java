@@ -143,7 +143,7 @@ public class MusicCommands implements Module {
 		if (!tc.getGuild().getAudioManager().isConnected() && !audioManager.isAttemptingToConnect()) {
 			setTextChannel(tc);
 			audioManager.openAudioConnection(vc);
-			//getGuildAudioPlayer(tc).resetPlayerMessage(false);
+			getGuildAudioPlayer(tc).playerMessage.resetPlayerMessage(false);
 			return true;
 		}
 		return false;
