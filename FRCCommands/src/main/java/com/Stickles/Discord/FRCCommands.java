@@ -57,7 +57,7 @@ public class FRCCommands implements Module {
 
 	@DiscordCommand(Name = "team", 
 			Summary = "Returns information about FRC teams")
-	public static void javascriptMORElikeJAVAisBETTERwahhaahaha(MessageReceivedEvent e, ArrayList<String> args) {
+	public static void javascriptMORElikeJAVAisBETTERwahhaahaha(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		int teamNumber = -1;
 		int switchArg = -1;
 		for (int i = 0; i < args.size(); i++)
@@ -77,7 +77,7 @@ public class FRCCommands implements Module {
 		else 
 			switchArg = 0;
 		
-		JSONObject info;
+		JSONObject jsinfo;
 		StringBuilder list;
 		String value = "info";
 		
@@ -86,19 +86,19 @@ public class FRCCommands implements Module {
 		
 		switch (value) {
 			case "awards" :
-				info = new JSONObject(HttpBlueAllianceGet(
+				jsinfo = new JSONObject(HttpBlueAllianceGet(
 						String.format("http://www.thebluealliance.com/api/v3/team/frc%s/awards",teamNumber)));
-				int total = info.get().length;
+				int total = jsinfo.get().length;
 				list = new StringBuilder();
 				list.append(String.format("**Team %s's Awards**%s", teamNumber,System.lineSeparator()));
 				for (int i=0; i < total; i++)
-					list.append(String.format("%s - %s %s",info.get(String.valueOf(i),"year")[0],info.get(String.valueOf(i),"name")[0],System.lineSeparator()));
+					list.append(String.format("%s - %s %s",jsinfo.get(String.valueOf(i),"year")[0],jsinfo.get(String.valueOf(i),"name")[0],System.lineSeparator()));
 				CommandHandler.sendMessage(e,list.toString(),false);
 				break;
 			case "info" :
-				info = new JSONObject(HttpBlueAllianceGet(
+				jsinfo = new JSONObject(HttpBlueAllianceGet(
 						String.format("http://www.thebluealliance.com/api/v3/team/frc%s",teamNumber)));
-				if (info.get("team_number")[0].isEmpty()) {
+				if (jsinfo.get("team_number")[0].isEmpty()) {
 					CommandHandler.sendMessage(e,String.format("Sorry, Team '%s' doesn't seem to exist.",teamNumber),false);
 					return;
 				}
@@ -107,16 +107,16 @@ public class FRCCommands implements Module {
 				eb.setColor(Color.red);
 				eb.setDescription(String.format("**Team %s's Info**", teamNumber));
 				
-				eb.addField("Nickname", info.get("nickname")[0], true);
-				eb.addField("Name", (info.get("name")[0].equals("null")) ? "N/A" : info.get("name")[0], true);
-				eb.addField("City", (info.get("city")[0].equals("null")) ? "N/A" : info.get("city")[0], true);
-				eb.addField("Country", (info.get("country")[0].equals("null")) ? "N/A" : info.get("country")[0], true);
-				eb.addField("State/Providence", (info.get("state_prov")[0].equals("null")) ? "N/A" : info.get("state_prov")[0], true);
-				eb.addField("Address", (info.get("address")[0].equals("null")) ? "N/A" : info.get("address")[0], true);
-				eb.addField("Google Maps", (info.get("gmaps_url")[0].equals("null")) ? "N/A" : info.get("gmaps_url")[0], false);
-				eb.addField("Website", (info.get("website")[0].equals("null")) ? "N/A" : info.get("website")[0], false);
-				eb.addField("Rookie Year", (info.get("rookie_year")[0].equals("null")) ? "N/A" : info.get("rookie_year")[0], false);
-				eb.addField("Motto", (info.get("motto")[0].equals("null")) ? "N/A" : info.get("motto")[0], false);
+				eb.addField("Nickname", jsinfo.get("nickname")[0], true);
+				eb.addField("Name", (jsinfo.get("name")[0].equals("null")) ? "N/A" : jsinfo.get("name")[0], true);
+				eb.addField("City", (jsinfo.get("city")[0].equals("null")) ? "N/A" : jsinfo.get("city")[0], true);
+				eb.addField("Country", (jsinfo.get("country")[0].equals("null")) ? "N/A" : jsinfo.get("country")[0], true);
+				eb.addField("State/Providence", (jsinfo.get("state_prov")[0].equals("null")) ? "N/A" : jsinfo.get("state_prov")[0], true);
+				eb.addField("Address", (jsinfo.get("address")[0].equals("null")) ? "N/A" : jsinfo.get("address")[0], true);
+				eb.addField("Google Maps", (jsinfo.get("gmaps_url")[0].equals("null")) ? "N/A" : jsinfo.get("gmaps_url")[0], false);
+				eb.addField("Website", (jsinfo.get("website")[0].equals("null")) ? "N/A" : jsinfo.get("website")[0], false);
+				eb.addField("Rookie Year", (jsinfo.get("rookie_year")[0].equals("null")) ? "N/A" : jsinfo.get("rookie_year")[0], false);
+				eb.addField("Motto", (jsinfo.get("motto")[0].equals("null")) ? "N/A" : jsinfo.get("motto")[0], false);
 
 				CommandHandler.sendMessage(e,eb.build(),false);
 				break;

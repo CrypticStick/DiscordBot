@@ -20,6 +20,8 @@ import com.Stickles.ModularCoding.Module;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class EssentialCommands implements Module {
@@ -32,7 +34,7 @@ public class EssentialCommands implements Module {
 	@DiscordCommand(Name = "help",
 			Summary = "Lists information about available commands",
 			Syntax = "help {command}")
-	public void IcanHELPyoU(MessageReceivedEvent e, ArrayList<String> args) {
+	public void IcanHELPyoU(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(0x0080FF);
@@ -97,34 +99,38 @@ public class EssentialCommands implements Module {
 			commandsSB = new StringBuilder();
 		}	
 		
-		if (!found) CommandHandler.sendMessage(e,String.format("Sorry %s, the requested command(s) do not exist.", e.getAuthor().getAsMention()),false);
+		if (eb.isEmpty()) CommandHandler.sendMessage(e,String.format("Sorry %s, there is no help information on the specified command(s).", e.getAuthor().getAsMention()),false);
 		else CommandHandler.sendMessage(e, eb.build(), true);
 	}
 	
 	@DiscordCommand(Name = "bot", 
 			Summary = "Edits properties of the bot",
-			Syntax = "bot [name] [game] {new text}",
+			Syntax = "bot [invite] [name] [game] {new text}",
 			SpecialPerms = true)
-	public static void itsTIMEtoEDITneoBOT(MessageReceivedEvent e, ArrayList<String> args) {
+	public static void itsTIMEtoEDITneoBOT(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		
 		if (args.isEmpty()) {
-			CommandHandler.sendMessage(e,String.format("%s, please type `name` or `game`, along with the new text.", e.getAuthor().getAsMention()),false);
+			CommandHandler.sendMessage(e,String.format("%s, please type `invite` or `name` / `game` along with the new text.", e.getAuthor().getAsMention()),false);
 			return;
 		}
 		
-		if (args.get(0).equals("name")) {
+		if (args.get(0).equals("invite")) {
+			CommandHandler.sendMessage(e,String.format("https://discordapp.com/api/oauth2/authorize?client_id=%s&scope=bot", DiscordBot.jda.getSelfUser().getId()),false);
+			return;
+		} else if (args.get(0).equals("name")) {
 			args.remove(args.get(0));
 			if (args.size() < 1) {
 				CommandHandler.sendMessage(e,String.format("%s, please enter what you would like the new text to be.", e.getAuthor().getAsMention()),false);
 				return;
 			}
-			e.getGuild().getMember(DiscordBot.jda.getSelfUser()).modifyNickname(
+			Guild g = info.getGuild();
+			g.getMember(DiscordBot.jda.getSelfUser()).modifyNickname(
 				String.join(" ", args)
 			).queue();
-			database.getGuildList().getGuild(e.getGuild().getId()).setName(String.join(" ", args));
+			database.getGuildList().getGuild(g.getId()).setName(String.join(" ", args));
 			DiscordBot.writeDatabase(database);
 			
-			CommandHandler.sendMessage(e,String.format("NeoBot will now be called \"%s\"!", database.getGuildList().getGuild(e.getGuild().getId()).getName()),false);
+			CommandHandler.sendMessage(e,String.format("The Bot will now be called \"%s\"!", database.getGuildList().getGuild(g.getId()).getName()),false);
 			return;
 		} else if (args.get(0).equals("game")) {
 			args.remove(args.get(0));
@@ -137,7 +143,7 @@ public class EssentialCommands implements Module {
 			DiscordBot.jda.getPresence().setActivity(
 					Activity.of(ActivityType.DEFAULT, String.format("%s (Type %shelp)", DiscordBot.database.getGame(), DiscordBot.database.getPrefix()))
 					);
-			CommandHandler.sendMessage(e,String.format("NeoBot is now playing \"%s\"!", String.join(" ", args)),false);
+			CommandHandler.sendMessage(e,String.format("The Bot is now playing \"%s\"!", String.join(" ", args)),false);
 			return;
 		}
 	}
@@ -146,7 +152,7 @@ public class EssentialCommands implements Module {
 			Summary = "Enables / disables bot code",
 			Syntax = "modules [load] [unload] {module name}",
 			SpecialPerms = true)
-	public static void carefulWithTheseMODULES(MessageReceivedEvent e, ArrayList<String> args) {
+	public static void carefulWithTheseMODULES(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (args.isEmpty()) {
 			CommandHandler.sendMessage(e,String.format("%s, please specify what you want to do with the modules.", e.getAuthor().getAsMention()),false);
 			return;

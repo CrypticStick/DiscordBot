@@ -22,7 +22,7 @@ public class FunCommands implements Module {
 			Aliases = {"repeat","copy"},
 			Summary = "I will copy what you say!",
 			Syntax = "echo [command]")
-	public void wowAnECHOCommand(MessageReceivedEvent e, ArrayList<String> args) {
+	public void wowAnECHOCommand(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 
 		CommandHandler.sendMessage(e,String.join(" ", args),false);
 		if (e.getChannelType() == ChannelType.TEXT) {
@@ -32,7 +32,7 @@ public class FunCommands implements Module {
 	
 	@DiscordCommand(Name = "random", 
 			Summary = "Provides a random number between 0 and 100")
-	public void superRanDOmLOL(MessageReceivedEvent e, ArrayList<String> args) {
+	public void superRanDOmLOL(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 
 		Random rnd = new Random();
 		Integer randomInt = rnd.nextInt(100);
@@ -41,13 +41,14 @@ public class FunCommands implements Module {
 	
 	@DiscordCommand(Name = "clap", 
 			Summary = "Will clap for free")
-	public void mEMErEVIEWclapCLAP(MessageReceivedEvent e, ArrayList<String> args) {
+	public void mEMErEVIEWclapCLAP(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		Random rnd = new Random();
 		int randomInt = 0;
 		while (randomInt == 0)
 			randomInt = rnd.nextInt(10);
 		CommandHandler.sendMessage(e,String.join("", Collections.nCopies(randomInt, DiscordEmojis.clap)),false);
-		e.getMessage().delete().queue();
+		if (e.getChannelType() == ChannelType.TEXT)
+			e.getMessage().delete().queue();
 	}
 
 

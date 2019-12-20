@@ -193,6 +193,8 @@ class JarClassLoader extends URLClassLoader {
 	    		}
     		}
     		
+    		if (module == null) return true;
+    		
     		if (module.getDependencies() != null)
 		    	for (String dependency : module.getDependencies())	//let dependencies know they're losing a dependant
 		    		if (DiscordBot.getModule(dependency) != null) 

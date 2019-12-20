@@ -248,14 +248,14 @@ public class MusicCommands implements Module {
 
 	@DiscordCommand(Name = "join",
 			Summary = "I will join your music channel and set a new text channel!")
-	public void timeTojoinaNEWGANG(MessageReceivedEvent e, ArrayList<String> args) {
+	public void timeTojoinaNEWGANG(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!memberInVoiceChannel(e.getTextChannel(),e.getAuthor(),false)) return;
 		connectToMemberVoiceChannel(e.getTextChannel(),e.getAuthor());
 	}
 	
 	@DiscordCommand(Name = "leave",
 			Summary = "I will leave your music channel!")
-	public void timeToGoAlone0n0(MessageReceivedEvent e, ArrayList<String> args) {
+	public void timeToGoAlone0n0(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!inCorrectTextChannel(e.getTextChannel(),e.getAuthor(),true)) return;
 		if (!memberInVoiceChannel(e.getTextChannel(),e.getAuthor(),true)) return;
 		if (botVoiceChannel(e.getTextChannel()) != null)
@@ -266,7 +266,7 @@ public class MusicCommands implements Module {
 	
 	@DiscordCommand(Name = "quit",
 			Summary = "I will end the player and leave.")
-	public void STOPNOWquitquitLEAVE(MessageReceivedEvent e, ArrayList<String> args) {
+	public void STOPNOWquitquitLEAVE(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!inCorrectTextChannel(e.getTextChannel(),e.getAuthor(),true)) return;
 		if (!memberInVoiceChannel(e.getTextChannel(),e.getAuthor(),true)) return;
 		if (botVoiceChannel(e.getTextChannel()) != null)
@@ -277,7 +277,7 @@ public class MusicCommands implements Module {
 	
 	@DiscordCommand(Name = "play",
 			Summary = "I will play the song you request!")
-	public void nowTHATswhatICALLmusic911(MessageReceivedEvent e, ArrayList<String> args) {
+	public void nowTHATswhatICALLmusic911(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!inCorrectTextChannel(e.getTextChannel(),e.getAuthor(),false)) return;
 		if (!memberInVoiceChannel(e.getTextChannel(),e.getAuthor(),true)) return;
 		getGuildAudioPlayer(e.getTextChannel()).player.setPaused(false);
@@ -291,14 +291,14 @@ public class MusicCommands implements Module {
 	
 	@DiscordCommand(Name = "pause",
 			Summary = "Pauses the current track.")
-	public void guessIllstopthen(MessageReceivedEvent e, ArrayList<String> args) {
+	public void guessIllstopthen(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!allowedToUsePlayerCommands(e.getTextChannel(),e.getAuthor(),true)) return;
 		getGuildAudioPlayer(e.getTextChannel()).player.setPaused(true);
 	}
 	
 	@DiscordCommand(Name = "volume",
 			Summary = "Sets the volume of the player.")
-	public void itsTimetochangeVOLUME(MessageReceivedEvent e, ArrayList<String> args) {
+	public void itsTimetochangeVOLUME(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!allowedToUsePlayerCommands(e.getTextChannel(),e.getAuthor(),true)) return;
 		if (args.size() == 0) {
 			CommandHandler.sendMessage(e, String.format("%s, please type what volume you want (0-100)!", e.getAuthor().getAsMention()),false);
@@ -318,14 +318,14 @@ public class MusicCommands implements Module {
 	
 	@DiscordCommand(Name = "back",
 			Summary = "Attempts to play the last track (only works in Loop mode)")
-	public void letsgoBackILikedthatOneSong(MessageReceivedEvent e, ArrayList<String> args) {
+	public void letsgoBackILikedthatOneSong(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!allowedToUsePlayerCommands(e.getTextChannel(),e.getAuthor(),true)) return;
 		getGuildAudioPlayer(e.getTextChannel()).scheduler.playLastTrack();
 	}
 	
 	@DiscordCommand(Name = "skip",
 			Summary = "Skips the current track.")
-	public void skIPITIDontWANTit(MessageReceivedEvent e, ArrayList<String> args) {
+	public void skIPITIDontWANTit(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!allowedToUsePlayerCommands(e.getTextChannel(),e.getAuthor(),true)) {
 			if (memberInVoiceChannel(e.getTextChannel(),e.getAuthor(),true))
 				getGuildAudioPlayer(e.getTextChannel()).addVoteSkip(e.getAuthor());
@@ -336,28 +336,28 @@ public class MusicCommands implements Module {
 	
 	@DiscordCommand(Name = "shuffle",
 			Summary = "Toggles the current shuffle mode.")
-	public void letsSHAKEthingsUPaLittle(MessageReceivedEvent e, ArrayList<String> args) {
+	public void letsSHAKEthingsUPaLittle(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!allowedToUsePlayerCommands(e.getTextChannel(),e.getAuthor(),true)) return;
 		getGuildAudioPlayer(e.getTextChannel()).scheduler.toggleShuffleMode();
 	}
 	
 	@DiscordCommand(Name = "loop",
 			Summary = "Toggles the current loop mode.")
-	public void looptyLOOPandPULL(MessageReceivedEvent e, ArrayList<String> args) {
+	public void looptyLOOPandPULL(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!allowedToUsePlayerCommands(e.getTextChannel(),e.getAuthor(),true)) return;
 		getGuildAudioPlayer(e.getTextChannel()).scheduler.toggleLoopMode();
 	}
 	
 	@DiscordCommand(Name = "loopone",
 			Summary = "Toggles whether or not to only play the current track.")
-	public void IreallyLIKEthisTrack(MessageReceivedEvent e, ArrayList<String> args) {
+	public void IreallyLIKEthisTrack(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!allowedToUsePlayerCommands(e.getTextChannel(),e.getAuthor(),true)) return;
 		getGuildAudioPlayer(e.getTextChannel()).scheduler.toggleLoopOneMode();
 	}
 	
 	@DiscordCommand(Name = "normal",
 			Summary = "Changes the sound back to normal.")
-	public void itdoesntSOUNDrightFIXit(MessageReceivedEvent e, ArrayList<String> args) {
+	public void itdoesntSOUNDrightFIXit(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!allowedToUsePlayerCommands(e.getTextChannel(),e.getAuthor(),true)) return;
 		getGuildAudioPlayer(e.getTextChannel()).updateMusicMode(MusicMode.Normal);
 
@@ -365,14 +365,14 @@ public class MusicCommands implements Module {
 	
 	@DiscordCommand(Name = "nightcore",
 			Summary = "MAKE THE MUSIC SOUND SUPER EPIC")
-	public void NIGHTCOREbetterthanFORTNITE(MessageReceivedEvent e, ArrayList<String> args) {
+	public void NIGHTCOREbetterthanFORTNITE(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!allowedToUsePlayerCommands(e.getTextChannel(),e.getAuthor(),true)) return;
 		getGuildAudioPlayer(e.getTextChannel()).updateMusicMode(MusicMode.Nightcore);
 	}
 	
 	@DiscordCommand(Name = "bassboost",
 			Summary = "THUD THUD THUD")
-	public void somebodyCALL911ItsBASSBOOSTED(MessageReceivedEvent e, ArrayList<String> args) {
+	public void somebodyCALL911ItsBASSBOOSTED(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!allowedToUsePlayerCommands(e.getTextChannel(),e.getAuthor(),true)) return;
 		getGuildAudioPlayer(e.getTextChannel()).updateMusicMode(MusicMode.BassBoosted);
 	}
@@ -381,7 +381,7 @@ public class MusicCommands implements Module {
 			Summary = "Sets the DJ role!",
 			Syntax = "setdj {role name}",
 			SpecialPerms = true)
-	public void areYOUaDJ(MessageReceivedEvent e, ArrayList<String> args) {
+	public void areYOUaDJ(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		//if (!allowedToUsePlayerCommands(e.getTextChannel(),e.getAuthor(),false)) return;
 		if (args.size() == 0) {
 			CommandHandler.sendMessage(e, String.format("%s, please type the name of the role!", e.getAuthor().getAsMention()),false);
@@ -402,14 +402,14 @@ public class MusicCommands implements Module {
 	
 	@DiscordCommand(Name = "clear",
 			Summary = "Erases the queue and stops the current song.")
-	public void deleteALLtheSONGS(MessageReceivedEvent e, ArrayList<String> args) {
+	public void deleteALLtheSONGS(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (!allowedToUsePlayerCommands(e.getTextChannel(),e.getAuthor(),false)) return;
 		getGuildAudioPlayer(e.getTextChannel()).scheduler.clearQueue();
 	}
 	
 	@DiscordCommand(Name = "queue",
 			Summary = "Displays the current queue.")
-	public void hereAreMySongs(MessageReceivedEvent e, ArrayList<String> args) {
+	public void hereAreMySongs(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (botVoiceChannel(e.getTextChannel()) == null) {
 			CommandHandler.sendMessage(e, String.format("%s, I'm not in a voice channel!", e.getAuthor().getAsMention()),false);
 			return;

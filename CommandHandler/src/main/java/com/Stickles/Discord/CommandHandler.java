@@ -1,11 +1,14 @@
 package com.Stickles.Discord;
 
 import net.dv8tion.jda.api.exceptions.VerificationLevelException;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -105,11 +108,31 @@ public class CommandHandler extends ListenerAdapter implements Module {
 	}
 	
 	public static Message sendMessage(MessageReceivedEvent e, MessageEmbed eb, boolean isPrivate) {
-		return sendMessage(e.getAuthor(),e.getTextChannel(),eb,isPrivate);
+		TextChannel destination;
+		try {
+			destination = e.getTextChannel();
+		} catch (IllegalStateException ex) {
+			isPrivate = true;
+			destination = null;
+		}
+		return sendMessage(e.getAuthor(),destination,eb,isPrivate);
 	}
 	
 	public static Message sendMessage(MessageReceivedEvent e, String msg, boolean isPrivate) {
-		return sendMessage(e.getAuthor(),e.getTextChannel(),msg,isPrivate);
+		TextChannel destination;
+		try {
+			destination = e.getTextChannel();
+		} catch (IllegalStateException ex) {
+			isPrivate = true;
+			destination = null;
+		}
+		return sendMessage(e.getAuthor(),destination,msg,isPrivate);
+	}
+	
+	@Override
+	public void onGuildJoin(GuildJoinEvent e) {
+		database.getGuildList().getGuild(e.getGuild().getId());
+		database.setGuildList(database.getGuildList());
 	}
 	
 	@Override
@@ -151,17 +174,45 @@ public class CommandHandler extends ListenerAdapter implements Module {
 					ArrayList<String> Aliases = new ArrayList<String>(				// gets the other aliases of the method
 							Arrays.asList(m.getAnnotation(DiscordCommand.class).Aliases()));
 					if (annotationName.equals(cmd) || Aliases.contains(cmd)) { 		// if the method has the command we are looking for...
+						Guild server;
+						if (e.getChannelType() == ChannelType.TEXT) {
+							server = e.getGuild();
+						} else {	//if message did not come from a text channel, we need to find the guild associated with the command
+							List<DiscordGuild> guildList = new ArrayList<DiscordGuild>();
+							for (DiscordGuild guild : database.getGuildList().getGuildList())
+								if (DiscordBot.jda.getGuildById(guild.getId()).getMember(e.getAuthor()) != null)
+									guildList.add(guild);
+							if (guildList.size() == 0) {
+								sendMessage(e,"You are not a member of any guilds with this bot!",false);
+								return;
+							} else if (guildList.size() == 1) {
+								server = DiscordBot.jda.getGuildById(guildList.get(0).getId());
+							} else {
+								if (args.get(args.size()-1).length() == 18) {
+									try {
+										server = DiscordBot.jda.getGuildById(args.remove(args.size()-1));
+									} catch (NumberFormatException ex) {
+										sendMessage(e,"That is not a proper guild ID!",false);
+										return;
+									}
+								} else {
+									sendMessage(e,"What guild is this command for? Please paste the guild id at the end of your command (or, just enter the command in your guild!).",false);
+									return;
+								}
+							}
+						}
 						if (m.getAnnotation(DiscordCommand.class).SpecialPerms()) {
 							boolean canGo = false;
-							String modRoleId = database.getGuildList().getGuild(e.getGuild().getId()).getModRoleId();
+							String modRoleId;
+							modRoleId = database.getGuildList().getGuild(server.getId()).getModRoleId();
 							if (modRoleId == null || modRoleId == "") {
 								sendMessage(e,"`Warning:` No valid moderator role has been set. Please use .setmod as soon as possible!",false);
 								canGo = true;
-							} else if (e.getGuild().getRoleById(modRoleId) == null) {
+							} else if (server.getRoleById(modRoleId) == null) {
 								sendMessage(e,"`Warning:` No valid moderator role has been set. Please use .setmod as soon as possible!",false);
 								canGo = true;
 							} else {
-								for (Role r : e.getMember().getRoles()) {
+								for (Role r : server.getMember(e.getAuthor()).getRoles()) {
 									if (r.getId().equals(modRoleId)) {
 										canGo = true;
 										break;
@@ -176,7 +227,7 @@ public class CommandHandler extends ListenerAdapter implements Module {
 						Thread commandThread = new Thread() {
 							public void run() {
 								try {
-									m.invoke(c, e, args);
+									m.invoke(c, e, args, new MessageInfo(server));
 								} catch (InvocationTargetException e1) {
 									Throwable fe = e1.getCause();
 									if (fe == null) fe = e1;
@@ -227,6 +278,11 @@ public class CommandHandler extends ListenerAdapter implements Module {
 		}
 		if (database == null)
 			database = DiscordBot.writeDatabase(new CommandHandlerDatabase());
+		
+		for (Guild gu : DiscordBot.jda.getGuilds()) {
+			database.getGuildList().getGuild(gu.getId());
+			database.setGuildList(database.getGuildList());
+		}
 		
 		DiscordBot.jda.addEventListener(this);
 		addDependants(this);

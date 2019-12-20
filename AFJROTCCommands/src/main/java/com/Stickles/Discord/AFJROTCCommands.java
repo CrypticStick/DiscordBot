@@ -18,12 +18,14 @@ public class AFJROTCCommands implements Module {
 	@DiscordCommand(Name = "request",
 			Summary = "Register account with server (Mandatory!)"
 			)
-	public void uhhhYeahIdLikeToRegister(MessageReceivedEvent e, ArrayList<String> args) {
+	public void uhhhYeahIdLikeToRegister(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		CommandHandler.sendMessage(e,"Welcome to Yakkie's AFJROTC Discord Registration!\nPlease Answer the following questions:",true);
-		
-		CommandHandler.sendMessage(e,"Test",false);
-		if (e.getChannelType() == ChannelType.TEXT) {
-			e.getMessage().delete().queue();
+		boolean done = false;
+		while (!done) {
+			CommandHandler.sendMessage(e,"What is your full name? (Ex. John Smith)",true);
+			if (e.getChannelType() == ChannelType.TEXT) {
+				e.getMessage().delete().queue();
+			}
 		}
 	}
 

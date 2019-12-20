@@ -10,6 +10,11 @@ public class DiscordGuild {
     public DiscordGuild() {
     }
 
+    public DiscordGuild(String id) {
+        this.id = id;
+        this.modRoleId = "";
+    }
+    
     public DiscordGuild(String id, String modRoleId) {
         this.id = id;
         this.modRoleId = modRoleId;

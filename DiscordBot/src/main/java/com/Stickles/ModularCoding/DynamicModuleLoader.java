@@ -3,6 +3,7 @@ package com.Stickles.ModularCoding;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,6 +44,25 @@ public abstract class DynamicModuleLoader {
 			new File(dir).mkdir();
 		
 		moduleDir = Paths.get(dir);
+	}
+	
+	private static boolean isCompletelyWritten(File file) {
+	    RandomAccessFile stream = null;
+	    try {
+	        stream = new RandomAccessFile(file, "rw");
+	        return true;
+	    } catch (Exception e) {
+	        System.out.println("[info] Waiting for file " + file.getName() + " to finish writing...");
+	    } finally {
+	        if (stream != null) {
+	            try {
+	                stream.close();
+	            } catch (IOException e) {
+	            	//too bad so sad
+	            }
+	        }
+	    }
+	    return false;
 	}
 	
 	protected static void startWatcher() throws NoModuleDirException {
@@ -96,9 +116,8 @@ public abstract class DynamicModuleLoader {
 			    File[] keySet = new File[modified.size()];
 			    modified.keySet().toArray(keySet);	//copy elements to array to avoid ConcurrentModificationException
 			    for (File file : keySet) {	// for all files being modified...
-					int millisWait = 5 * 1000;	//set a timeout of 5 seconds
-					long end = modified.get(file) + millisWait;	//set the target time to two seconds since last modification
-					if (System.currentTimeMillis() > end) {	//if it has been more than two seconds...
+					
+					if (isCompletelyWritten(file)) {	//if the file is ready...
 						modified.remove(file);	//file is no longer being modified
 						try {
 							loadJar(file,true);

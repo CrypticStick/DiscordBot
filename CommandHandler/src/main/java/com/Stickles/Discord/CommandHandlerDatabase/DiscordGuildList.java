@@ -49,7 +49,7 @@ public class DiscordGuildList {
     public DiscordGuild getGuild(String id) {
     	DiscordGuild guild = isGuildSaved(id);
     	if (guild == null) {
-    		guild = new DiscordGuild(id, "");
+    		guild = new DiscordGuild(id);
     		addGuild(guild);
     	}
     	return guild;
