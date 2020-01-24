@@ -39,7 +39,7 @@ public class CommandHandler extends ListenerAdapter implements Module {
 			Summary = "Sets the mod role!",
 			Syntax = "setmod {role name}",
 			SpecialPerms = true)
-	public void areYOUaMod(MessageReceivedEvent e, ArrayList<String> args) {
+	public void areYOUaMod(MessageReceivedEvent e, ArrayList<String> args, MessageInfo info) {
 		if (args.size() == 0) {
 			CommandHandler.sendMessage(e, String.format("%s, please type the name of the role!", e.getAuthor().getAsMention()),false);
 			return;
@@ -188,7 +188,7 @@ public class CommandHandler extends ListenerAdapter implements Module {
 							} else if (guildList.size() == 1) {
 								server = DiscordBot.jda.getGuildById(guildList.get(0).getId());
 							} else {
-								if (args.get(args.size()-1).length() == 18) {
+								if (args.size() != 0 && args.get(args.size()-1).length() == 18) {
 									try {
 										server = DiscordBot.jda.getGuildById(args.remove(args.size()-1));
 									} catch (NumberFormatException ex) {
